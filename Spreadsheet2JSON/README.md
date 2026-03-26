@@ -1,16 +1,15 @@
-# 🚀 Spreadsheet to JSON Pro (SPY-E & 123Tool)
+# 🚀 Spreadsheet To JSON Database
 
-Sistem otomasi sinkronisasi data Google Sheets ke format JSON dengan notifikasi Telegram terintegrasi.
+Sistem backend otomatis yang mengubah Google Sheets menjadi database JSON, mencadangkannya di Drive, memberikan notifikasi Telegram, dan menampilkannya di Dashboard modern.
 
-## ✨ Fitur Utama
-- **Auto-Sync**: Update otomatis ke Google Drive setiap kali data diubah.
-- **Telegram Alert**: Notifikasi real-time saat database diperbarui.
-- **API Ready**: Endpoint JSON publik yang bisa langsung dikonsumsi aplikasi.
-- **CamelCase Format**: Header otomatis dikonversi ke format standar pemrograman.
+## 🛠 Fitur Utama
+- **Auto-Sync**: Update otomatis ke Google Drive & Telegram saat edit data.
+- **REST API**: Endpoint JSON siap pakai untuk aplikasi external.
+- **Web Dashboard**: Tampilan tabel interaktif berbasis web.
+- **CamelCase Normalization**: Header otomatis bersih & pro.
 
-## 🛠 Cara Pakai
-1. Masukkan API Token Telegram dan ID Folder Drive ke dalam `CONFIG`.
-2. Aktifkan 'On Edit' Trigger di Apps Script Dashboard.
-3. Nikmati database JSON yang selalu up-to-date!
+## 📦 Kelengkapan
+- `Code.gs`: Logika backend & Integrasi API.
+- `Index.html`: Dashboard tampilan Glassmorphism.
 
-Developed with ❤️ by **SPY-E & 123Tool**.
+*Powered by SPY-E & 123Tool*
