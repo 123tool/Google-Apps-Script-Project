@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+    .glass-card { background: rgba(255, 255, 255, 0.9); border-radius: 15px; border: none; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+    .navbar-brand { font-weight: bold; color: #2c3e50 !important; }
+    .table thead { background: #2c3e50; color: white; }
+    .status-badge { font-size: 0.8rem; padding: 5px 10px; border-radius: 20px; background: #27ae60; color: white; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-light bg-white border-bottom mb-4">
+    <div class="container">
+      <span class="navbar-brand">🚀 <?= brand ?> Dashboard</span>
+      <span class="status-badge">Live API Active</span>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="card glass-card p-4">
+      <h5 class="mb-4">Data Terkini dari Spreadsheet</h5>
+      <div class="table-responsive">
+        <table class="table table-hover" id="dataTable">
+          <thead><tr id="tableHeader"></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div id="loader" class="text-center p-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Memuat data dari API...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    google.script.run.withSuccessHandler(showData).getApiData();
+
+    function showData(response) {
+      const data = response.results;
+      const loader = document.getElementById('loader');
+      const header = document.getElementById('tableHeader');
+      const body = document.getElementById('tableBody');
+      
+      loader.style.display = 'none';
+      if (data.length === 0) return;
+
+      // Buat Header
+      Object.keys(data[0]).forEach(key => {
+        header.innerHTML += `<th>${key.toUpperCase()}</th>`;
+      });
+
+      // Buat Baris
+      data.forEach(item => {
+        let row = '<tr>';
+        Object.values(item).forEach(val => { row += `<td>${val}</td>`; });
+        row += '</tr>';
+        body.innerHTML += row;
+      });
+    }
+  </script>
+</body>
+</html>
