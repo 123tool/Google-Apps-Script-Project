@@ -35,10 +35,10 @@ Untuk menjalankan seluruh project dalam repositori ini, ikuti langkah-langkah st
 Project ini dikembangkan dan dikelola secara profesional di bawah bendera **SPY-E & 123Tool**.
 
 * **Brand:** SPY-E & 123Tool
-* **Developer:** [Nama/Username Anda]
+* **Developer:** [123Tool]
 * **Layanan:** Custom Script, Automation System, & Bot Development.
-* **Telegram:** [Link/Username Telegram Anda]
-* **Portofolio:** [Link Marketplace/Web Anda]
+* **Telegram:** [123Tool]
+* **Portofolio:** [123Tool]
 
 ---
 
