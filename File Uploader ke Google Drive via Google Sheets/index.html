@@ -1,0 +1,151 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body { background: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    .drop-zone { border: 2px dashed #334155; transition: all 0.3s ease; }
+    .drop-zone:hover, .drop-zone.active { border-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
+    .btn-gradient { background: linear-gradient(90deg, #0ea5e9, #2563eb); transition: transform 0.2s; }
+    .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    .btn-gradient:active { transform: translateY(0); }
+    #preview { max-height: 150px; display: none; margin: 10px auto; border-radius: 8px; border: 2px solid #334155; }
+  </style>
+</head>
+<body class="p-6">
+  <div class="glass p-8 rounded-2xl shadow-2xl max-w-md mx-auto text-center">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-white mb-2">Upload File Pro</h2>
+      <p class="text-slate-400 text-sm">Pilih atau tarik file ke area di bawah ini</p>
+    </div>
+
+    <!-- Drop Zone -->
+    <div id="dropZone" class="drop-zone p-10 rounded-xl cursor-pointer mb-6" onclick="document.getElementById('fileInput').click()">
+      <div class="flex flex-col items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+        </svg>
+        <span id="fileNameDisplay" class="text-sm font-medium">Klik untuk telusuri file</span>
+      </div>
+      <img id="preview" alt="Preview">
+    </div>
+
+    <input type="file" id="fileInput" class="hidden" onchange="handleFileSelect(this)">
+    
+    <!-- Progress Bar (Hidden by default) -->
+    <div id="progressWrapper" class="hidden mb-6">
+      <div class="flex justify-between mb-1">
+        <span class="text-xs font-medium text-blue-400">Memproses...</span>
+        <span id="percentText" class="text-xs font-medium text-blue-400">0%</span>
+      </div>
+      <div class="w-full bg-slate-700 rounded-full h-2">
+        <div id="progressBar" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <button id="uploadBtn" onclick="startUpload()" class="btn-gradient w-full py-3 rounded-lg font-bold text-white shadow-lg opacity-50 cursor-not-allowed" disabled>
+      MULAI UPLOAD
+    </button>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const preview = document.getElementById('preview');
+    const progressWrapper = document.getElementById('progressWrapper');
+    const progressBar = document.getElementById('progressBar');
+    const percentText = document.getElementById('percentText');
+
+    let selectedFile = null;
+
+    function handleFileSelect(input) {
+      if (input.files.length > 0) {
+        selectedFile = input.files[0];
+        fileNameDisplay.innerText = selectedFile.name;
+        uploadBtn.disabled = false;
+        uploadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        
+        // Image Preview
+        if (selectedFile.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+          reader.readAsDataURL(selectedFile);
+        } else {
+          preview.style.display = 'none';
+        }
+      }
+    }
+
+    async function startUpload() {
+      if (!selectedFile) return;
+
+      uploadBtn.disabled = true;
+      uploadBtn.innerText = "SEDANG MENGIRIM...";
+      progressWrapper.classList.remove('hidden');
+
+      const reader = new FileReader();
+      
+      // Simulasi progress halus
+      let prog = 0;
+      const interval = setInterval(() => {
+        if(prog < 90) {
+          prog += 5;
+          updateProgress(prog);
+        }
+      }, 100);
+
+      reader.onload = function(e) {
+        const base64 = e.target.result.split(',')[1];
+        
+        google.script.run
+          .withSuccessHandler(res => {
+            clearInterval(interval);
+            updateProgress(100);
+            Swal.fire({
+              title: 'Berhasil!',
+              text: 'File ' + res.name + ' telah terunggah dengan aman.',
+              icon: 'success',
+              background: '#1e293b',
+              color: '#fff',
+              confirmButtonColor: '#3b82f6'
+            }).then(() => {
+              google.script.host.close();
+            });
+          })
+          .withFailureHandler(err => {
+            clearInterval(interval);
+            Swal.fire('Gagal!', err.message, 'error');
+            uploadBtn.disabled = false;
+            uploadBtn.innerText = "COBA LAGI";
+          })
+          .processUpload(base64, selectedFile.name, selectedFile.type);
+      };
+
+      reader.readAsDataURL(selectedFile);
+    }
+
+    function updateProgress(val) {
+      progressBar.style.width = val + '%';
+      percentText.innerText = val + '%';
+    }
+
+    // Drag & Drop Handling
+    const dropZone = document.getElementById('dropZone');
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+    });
+    dropZone.addEventListener('drop', e => {
+      fileInput.files = e.dataTransfer.files;
+      handleFileSelect(fileInput);
+    });
+  </script>
+</body>
+</html>
+
+```
