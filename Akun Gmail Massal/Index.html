@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #1a1c29, #2d3250); /* Background gelap modern */
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px); /* Efek Glassmorphism */
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 30px;
+        width: 80%;
+        max-width: 800px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      .header-brand {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #00ffcc; /* Aksen warna khas cyber/tech */
+      }
+      .stats-container {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .stat-card {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        flex: 1;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glass-panel">
+      <div class="header-brand">⚙️ Account Gmail Manager</div>
+      
+      <div class="stats-container">
+        <div class="stat-card">
+          <div style="font-size: 12px; color: #aaa;">Total Diproses</div>
+          <div style="font-size: 24px; font-weight: bold;" id="totalAcc">0</div>
+        </div>
+        <div class="stat-card" style="border-bottom: 3px solid #00ffcc;">
+          <div style="font-size: 12px; color: #aaa;">Sukses</div>
+          <div style="font-size: 24px; font-weight: bold; color: #00ffcc;" id="successAcc">0</div>
+        </div>
+      </div>
+      
+      </div>
+  </body>
+</html>
